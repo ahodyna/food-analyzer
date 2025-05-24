@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -35,47 +35,47 @@ apiClient.interceptors.response.use(
 
 // API functions
 export const foodAnalysisAPI = {
-    //   analyzeFood: async (imageFile, options = {}) => {
+      analyzeFood: async (imageFile, options = {}) => {
 
-    //     const formData = new FormData();
-    //     formData.append('image', imageFile);
+        const formData = new FormData();
+        formData.append('image', imageFile);
 
-    //     // Add any additional options
-    //     Object.keys(options).forEach(key => {
-    //       formData.append(key, options[key]);
-    //     });
+        // Add any additional options
+        Object.keys(options).forEach(key => {
+          formData.append(key, options[key]);
+        });
 
-    //     const response = await apiClient.post('/analyze-food', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //       onUploadProgress: options.onUploadProgress,
-    //     });
+        const response = await apiClient.post('/analyze-food', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: options.onUploadProgress,
+        });
 
-    //     return response.data;
-    //   },
+        return response.data;
+      },
 
-    analyzeFood: async (imageFile, options = {}) => {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Simulate upload progress
-        if (options.onUploadProgress) {
-            for (let p = 0; p <= 100; p += 20) {
-                options.onUploadProgress({ loaded: p, total: 100 });
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-        }
-        // Return mocked response
-        return {
-            food_type: 'pizza',
-            confidence: 0.85,
-            nutrition: {
-                protein: 10,
-                fat: 12,
-                carbohydrates: 25,
-            }
-        };
-    },
+    // analyzeFood: async (imageFile, options = {}) => {
+    //     // Simulate network delay
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //     // Simulate upload progress
+    //     if (options.onUploadProgress) {
+    //         for (let p = 0; p <= 100; p += 20) {
+    //             options.onUploadProgress({ loaded: p, total: 100 });
+    //             await new Promise(resolve => setTimeout(resolve, 100));
+    //         }
+    //     }
+    //     // Return mocked response
+    //     return {
+    //         food_type: 'pizza',
+    //         confidence: 0.85,
+    //         nutrition: {
+    //             protein: 10,
+    //             fat: 12,
+    //             carbohydrates: 25,
+    //         }
+    //     };
+    // },
 
     getAnalysisHistory: async () => {
         const response = await apiClient.get('/analysis-history');
