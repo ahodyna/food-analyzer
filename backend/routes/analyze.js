@@ -34,7 +34,7 @@ router.post('/analyze-food', upload.single('image'), async (req, res) => {
             }
         };
 
-        res.json(mlResponse.data);
+        res.json(mlResponse);
     } catch (error) {
         console.error('Error during food analysis:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });

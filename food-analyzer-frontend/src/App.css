@@ -3,13 +3,18 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-align: center;
-    margin-bottom: var(--spacing-lg);
-    user-select: none;
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.05em;
+  animation: fadeIn 0.7s ease-out;
+  user-select: none;
+
+  /* subtle shadow for lift */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .button-container {

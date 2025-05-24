@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Food Upload</h1>
+      <h1 className="page-title">Know Your Meal: Protein, Fat & Carbs</h1>
       <ImageUpload
         selectedFile={selectedFile}
         previewUrl={previewUrl}
