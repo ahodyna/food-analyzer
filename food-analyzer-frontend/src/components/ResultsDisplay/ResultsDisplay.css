@@ -1,0 +1,233 @@
+.results-display {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.results-header h2 {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.new-analysis-btn {
+  font-size: 0.9rem;
+}
+
+.results-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.food-identification {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.food-info {
+  flex: 1;
+}
+
+.food-name {
+  font-size: 1.8rem;
+  margin: 0 0 var(--spacing-sm) 0;
+  font-weight: 600;
+}
+
+.confidence-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.confidence-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.confidence-text {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.food-emoji {
+  font-size: 4rem;
+  opacity: 0.8;
+}
+
+.nutrition-overview h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.per-serving {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: normal;
+}
+
+.calories-display {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.calories-circle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.calories-number {
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.calories-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.macronutrients-grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.nutrient-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  background: var(--light-gray);
+}
+
+.nutrient-icon {
+  font-size: 1.5rem;
+}
+
+.nutrient-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nutrient-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.nutrient-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.nutrient-bar {
+  width: 80px;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nutrient-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+.chart-section h3 {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.health-insights h3 {
+  margin-bottom: var(--spacing-md);
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.insight-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--light-gray);
+  border-radius: var(--border-radius-md);
+}
+
+.insight-icon {
+  font-size: 1.2rem;
+}
+
+.insight-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .results-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    text-align: center;
+  }
+  
+  .food-identification {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+  
+  .food-name {
+    font-size: 1.5rem;
+  }
+  
+  .food-emoji {
+    font-size: 3rem;
+  }
+  
+  .calories-circle {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .calories-number {
+    font-size: 1.6rem;
+  }
+  
+  .nutrient-item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--spacing-xs);
+  }
+  
+  .nutrient-bar {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
