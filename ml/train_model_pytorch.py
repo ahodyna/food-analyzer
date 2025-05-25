@@ -28,7 +28,7 @@ CONFIG = {
     'model_save_path': './models',
     'img_size': 224,
     'batch_size': 8,  # Можна зменшити до 16 або 8 якщо не вистачає пам'яті
-    'epochs': 1,
+    'epochs': 50,
     'learning_rate': 0.001,
     'validation_split': 0.2,
     'early_stopping_patience': 10,

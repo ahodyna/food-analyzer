@@ -25,6 +25,17 @@ export const useFoodAnalysis = () => {
           setUploadProgress(progress);
         }
       });
+      if (result.nutrition) {
+        const nutrition = result.nutrition;
+        const fixedNutrition = {
+          calories: parseFloat(nutrition.calories),
+          protein: parseFloat(nutrition.protein),
+          fat: parseFloat(nutrition.fat),
+          carbohydrates: parseFloat(nutrition.carbohydrates),
+        };
+        result.nutrition = fixedNutrition;
+      }
+
 
       setAnalysis(result);
       return result;

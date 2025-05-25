@@ -128,5 +128,5 @@ async def predict_food_batch(files: list[UploadFile] = File(...), top_k: int = 5
     return JSONResponse(content={'results': results})
 
 if __name__ == "__main__":
-    # For development - run without reload when executed directly
+    # For development
     uvicorn.run(app, host="0.0.0.0", port=5000)
