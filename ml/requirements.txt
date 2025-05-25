@@ -1,0 +1,18 @@
+# PyTorch and related
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Core dependencies
+numpy>=1.21.0
+Pillow>=8.3.0
+
+# FastAPI and web server
+fastapi>=0.68.0
+uvicorn[standard]>=0.15.0
+python-multipart>=0.0.5
+
+# Data processing and visualization
+matplotlib>=3.4.0
+tqdm>=4.64.0
+scikit-learn>=1.0.0

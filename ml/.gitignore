@@ -1,0 +1,75 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment and secret files
+.env
+.env.*
+
+# Data files
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.db
+*.sqlite
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.npz
+*.npy
+
+# Models
+*.ckpt
+*.pt
+*.pth
+*.pb
+*.tflite
+*.onnx
+*.sav
+
+# TensorBoard and training output
+logs/
+events.out.tfevents.*
+
+# Large files
+*.zip
+*.tar.gz
+*.tar
+*.7z
+
+# Output folders
+output/
+results/
+runs/
+checkpoints/
+models/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+dataset
