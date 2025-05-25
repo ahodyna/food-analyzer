@@ -92,14 +92,19 @@ router.post('/analyze-food', upload.single('image'), async (req, res) => {
             }
         }
 
-        console.log('nutritionInfo', nutritionInfo)
+
+        const isLowAccuracy = response.data.top_prediction?.confidence < 0.7;
 
         res.json({
             success: true,
             food_type: predictedClass,
             confidence: response.data.top_prediction?.confidence,
             nutrition: nutritionInfo,
-            message: 'Food analysis completed successfully'
+            message: isLowAccuracy ? 'Low accuracy warning' : 'Food analysis completed successfully',
+            warnings: {
+                lowAccuracy: isLowAccuracy,
+                noNutrition: !nutritionInfo
+            }
         });
 
 

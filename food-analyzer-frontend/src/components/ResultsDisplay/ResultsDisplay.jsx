@@ -7,51 +7,147 @@ import './ResultsDisplay.css';
 const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
     if (!analysis) return null;
 
-    const { food_type, confidence, nutrition } = analysis;
-    const { protein, fat, carbohydrates } = nutrition;
-    const calories = calculateCalories(protein, fat, carbohydrates);
+    const { food_type, confidence, nutrition, success, message } = analysis;
 
-    const confidencePercentage = Math.round(confidence * 100);
-    const confidenceColor = getConfidenceColor(confidence);
+    // Перевіряємо чи це помилка з низькою точністю
+    const isLowAccuracy = (success === false && message === 'Accuracy less than 70%') || confidence < 0.7;
+    
+    // Перевіряємо чи немає інформації про калорії
+    const hasNutritionError = food_type && !nutrition;
+    
+    // Чи це повністю успішний результат (без попереджень)
+    const isFullySuccessful = food_type && nutrition && confidence >= 0.7;
 
-    const nutritionData = [
-        {
-            label: 'Protein',
-            value: protein,
-            color: '#FF6B6B',
-            icon: '🥩'
-        },
-        {
-            label: 'Fat',
-            value: fat,
-            color: '#4ECDC4',
-            icon: '🥑'
-        },
-        {
-            label: 'Carbohydrates',
-            value: carbohydrates,
-            color: '#45B7D1',
-            icon: '🍞'
-        }
-    ];
-
-    return (
+    // Відображення попередження про низьку точність
+    const renderLowAccuracyWarning = () => (
         <motion.div
-            className="results-display"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            className="warning-container warning-low-accuracy card"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
         >
-            <div className="results-header">
-                <h2>Analysis Results</h2>
-                <button
-                    className="btn btn-secondary new-analysis-btn"
-                    onClick={onNewAnalysis}
-                >
-                    🔄 New Analysis
-                </button>
+            <div className="warning-icon">⚠️</div>
+            <div className="warning-content">
+                <h3>Низька точність розпізнавання</h3>
+                <p>
+                    Система розпізнала продукт з точністю менше 70%. Результат може бути неточним. 
+                    Спробуйте зробити більш чітке фото або змініть кут зйомки.
+                </p>
+                <div className="warning-details">
+                    <p><strong>Розпізнано:</strong> {capitalizeWords(food_type)}</p>
+                    <p><strong>Точність:</strong> {Math.round(confidence * 100)}%</p>
+                </div>
             </div>
+        </motion.div>
+    );
 
+    // Відображення попередження про відсутність калорій
+    const renderNutritionWarning = () => (
+        <motion.div
+            className="warning-container warning-nutrition-error card"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+        >
+            <div className="warning-icon">ℹ️</div>
+            <div className="warning-content">
+                <h3>Інформація про калорії недоступна</h3>
+                <p>
+                    Продукт успішно розпізнано, але не вдалося отримати детальну інформацію про 
+                    калорійність та поживні речовини. Спробуйте пізніше або введіть дані вручну.
+                </p>
+                <div className="warning-details">
+                    <p><strong>Розпізнано:</strong> {capitalizeWords(food_type)}</p>
+                    <p><strong>Точність:</strong> {Math.round(confidence * 100)}%</p>
+                </div>
+            </div>
+        </motion.div>
+    );
+
+    // Спрощена версія результату для випадків з попередженнями
+    const renderSimpleResult = () => {
+        const confidencePercentage = Math.round(confidence * 100);
+        const confidenceColor = getConfidenceColor(confidence);
+
+        return (
+            <div className="results-content">
+                {/* Food Identification - завжди показуємо якщо є food_type */}
+                <motion.div
+                    className="food-identification card"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <div className="food-info">
+                        <h3 className="food-name">{capitalizeWords(food_type)}</h3>
+                        <div className="confidence-badge">
+                            <span
+                                className="confidence-indicator"
+                                style={{ backgroundColor: confidenceColor }}
+                            ></span>
+                            <span className="confidence-text">
+                                {confidencePercentage}% confidence
+                            </span>
+                        </div>
+                    </div>
+                    <div className="food-emoji">
+                        {getFoodEmoji(food_type)}
+                    </div>
+                </motion.div>
+
+                {/* Показуємо повідомлення про те, що детальна інформація недоступна */}
+                <motion.div
+                    className="nutrition-unavailable card"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <div className="unavailable-content">
+                        <div className="unavailable-icon">📊</div>
+                        <h3>Детальна інформація про калорії недоступна</h3>
+                        <p>
+                            {isLowAccuracy ? 
+                                'Через низьку точність розпізнавання ми не можемо надати точну інформацію про поживні речовини.' :
+                                'Не вдалося отримати інформацію про калорії та БЖУ для цього продукту.'
+                            }
+                        </p>
+                        <div className="manual-entry-suggestion">
+                            <p>💡 <strong>Порада:</strong> Ви можете ввести дані вручну або спробувати зробити більш чітке фото.</p>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        );
+    };
+    // Повний успішний результат (ваш оригінальний код)
+    const renderSuccessfulResult = () => {
+        const { protein, fat, carbohydrates } = nutrition;
+        const calories = calculateCalories(protein, fat, carbohydrates);
+        const confidencePercentage = Math.round(confidence * 100);
+        const confidenceColor = getConfidenceColor(confidence);
+
+        const nutritionData = [
+            {
+                label: 'Protein',
+                value: protein,
+                color: '#FF6B6B',
+                icon: '🥩'
+            },
+            {
+                label: 'Fat',
+                value: fat,
+                color: '#4ECDC4',
+                icon: '🥑'
+            },
+            {
+                label: 'Carbohydrates',
+                value: carbohydrates,
+                color: '#45B7D1',
+                icon: '🍞'
+            }
+        ];
+
+        return (
             <div className="results-content">
                 {/* Food Identification */}
                 <motion.div
@@ -162,11 +258,40 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                     </div>
                 </motion.div>
             </div>
+        );
+    };
+
+    return (
+        <motion.div
+            className="results-display"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <div className="results-header">
+                <h2>Analysis Results</h2>
+                <button
+                    className="btn btn-secondary new-analysis-btn"
+                    onClick={onNewAnalysis}
+                >
+                    🔄 New Analysis
+                </button>
+            </div>
+
+            <div className="results-content">
+                {/* Показуємо попередження ВСЕРЕДИНІ results-content */}
+                {isLowAccuracy && renderLowAccuracyWarning()}
+                {hasNutritionError && !isLowAccuracy && renderNutritionWarning()}
+                
+                {/* Показуємо результат залежно від ситуації */}
+                {isFullySuccessful && renderSuccessfulResult()}
+                {(isLowAccuracy || hasNutritionError) && !isFullySuccessful && food_type && renderSimpleResult()}
+            </div>
         </motion.div>
     );
 };
 
-// Helper functions
+// Helper functions (ваші оригінальні функції)
 const getFoodEmoji = (foodType) => {
     const emojiMap = {
         'apple_pie': '🥧',
