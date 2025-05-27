@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-Food Recognition Model Inference Script - PyTorch Version
-Updated to handle file uploads from FastAPI
-"""
-
 import os
 import sys
 import json
@@ -29,19 +23,15 @@ class FoodPredictor:
         self.create_transform()
     
     def load_model(self):
-        """Завантажує тренований PyTorch модель"""
         try:
-            # Завантажуємо конфігурацію
             config_path = os.path.join(self.model_path, 'model_config.json')
             with open(config_path, 'r') as f:
                 self.config = json.load(f)
             
             self.class_names = self.config['class_names']
             
-            # Створюємо модель
             self.model = models.resnet50(weights=None)
             
-            # Замінюємо останній шар
             num_features = self.model.fc.in_features
             self.model.fc = nn.Sequential(
                 nn.Dropout(0.5),
@@ -56,12 +46,10 @@ class FoodPredictor:
                 nn.Linear(256, len(self.class_names))
             )
             
-            # Завантажуємо веса
             model_file = os.path.join(self.model_path, 'food_model_pytorch.pth')
             checkpoint = torch.load(model_file, map_location=self.device)
             self.model.load_state_dict(checkpoint['model_state_dict'])
             
-            # Переводимо в режим inference
             self.model.to(self.device)
             self.model.eval()
             
@@ -73,7 +61,6 @@ class FoodPredictor:
             raise
     
     def create_transform(self):
-        """Створює трансформації для preprocessing"""
         img_size = self.config.get('img_size', 224)
         
         self.transform = transforms.Compose([
@@ -83,18 +70,13 @@ class FoodPredictor:
         ])
     
     def preprocess_image_from_bytes(self, image_bytes: bytes):
-        """Preprocessing зображення з bytes для prediction"""
         try:
-            # Створюємо BytesIO об'єкт з bytes
             image_stream = io.BytesIO(image_bytes)
             
-            # Завантажуємо зображення з stream
             image = Image.open(image_stream).convert('RGB')
             
-            # Застосовуємо трансформації
             image_tensor = self.transform(image)
             
-            # Додаємо batch dimension
             image_tensor = image_tensor.unsqueeze(0)
             
             return image_tensor.to(self.device)
@@ -104,15 +86,11 @@ class FoodPredictor:
             raise
     
     def preprocess_image_from_path(self, image_path: str):
-        """Preprocessing зображення з файлу для prediction (для зворотної сумісності)"""
         try:
-            # Завантажуємо зображення
             image = Image.open(image_path).convert('RGB')
-            
-            # Застосовуємо трансформації
+          
             image_tensor = self.transform(image)
             
-            # Додаємо batch dimension
             image_tensor = image_tensor.unsqueeze(0)
             
             return image_tensor.to(self.device)
@@ -122,17 +100,13 @@ class FoodPredictor:
             raise
     
     def predict_from_bytes(self, image_bytes: bytes, top_k=5):
-        """Передбачає клас їжі для зображення з bytes"""
         try:
-            # Preprocessing
             image_tensor = self.preprocess_image_from_bytes(image_bytes)
             
-            # Prediction
             with torch.no_grad():
                 outputs = self.model(image_tensor)
                 probabilities = torch.nn.functional.softmax(outputs, dim=1)
             
-            # Отримуємо top-k predictions
             top_probs, top_indices = torch.topk(probabilities, top_k)
             
             top_predictions = []
@@ -159,11 +133,9 @@ class FoodPredictor:
             }
     
     def predict(self, image_input: Union[str, bytes], top_k=5):
-        """Універсальна функція prediction - приймає або шлях до файлу або bytes"""
         if isinstance(image_input, bytes):
             return self.predict_from_bytes(image_input, top_k)
         else:
-            # Для зворотної сумісності - якщо передано шлях до файлу
             try:
                 image_tensor = self.preprocess_image_from_path(image_input)
                 
@@ -197,7 +169,6 @@ class FoodPredictor:
                 }
     
     def predict_batch(self, image_paths, top_k=5):
-        """Передбачає класи для кількох зображень"""
         results = []
         for image_path in image_paths:
             result = self.predict(image_path, top_k)
@@ -205,7 +176,6 @@ class FoodPredictor:
         return results
 
 def main():
-    """Основна функція для command line usage"""
     parser = argparse.ArgumentParser(description='Food Recognition Inference - PyTorch')
     parser.add_argument('image_path', help='Path to image file')
     parser.add_argument('--model_path', default='./models', help='Path to model directory')
@@ -215,13 +185,10 @@ def main():
     args = parser.parse_args()
     
     try:
-        # Ініціалізуємо predictor
         predictor = FoodPredictor(args.model_path)
         
-        # Робимо prediction
         result = predictor.predict(args.image_path, args.top_k)
         
-        # Виводимо результат
         if args.output:
             with open(args.output, 'w') as f:
                 json.dump(result, f, indent=2)
