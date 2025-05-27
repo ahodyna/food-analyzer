@@ -6,14 +6,12 @@ const router = express.Router();
 const openai = require('../utils/openaiClient');
 const { extractJson } = require('../utils/parseFile')
 
-// Конфігурація multer для обробки файлів
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
         fileSize: 10 * 1024 * 1024, // 10MB максимум
     },
     fileFilter: (req, file, cb) => {
-        // Перевіряємо чи це зображення
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
@@ -22,10 +20,8 @@ const upload = multer({
     }
 });
 
-// Маршрут для аналізу їжі
 router.post('/analyze-food', upload.single('image'), async (req, res) => {
     try {
-        // Перевіряємо чи файл завантажився
         if (!req.file) {
             return res.status(400).json({
                 error: 'No image file uploaded',
@@ -45,7 +41,6 @@ router.post('/analyze-food', upload.single('image'), async (req, res) => {
             contentType: req.file.mimetype
         });
 
-        // Параметри для prediction
         const topK = req.body.top_k || req.query.top_k || 5;
 
         const response = await axios.post(`http://localhost:5000/predict?top_k=${topK}`, formData, {
@@ -53,7 +48,7 @@ router.post('/analyze-food', upload.single('image'), async (req, res) => {
                 ...formData.getHeaders(),
                 'Accept': 'application/json'
             },
-            timeout: 30000, // 30 секунд timeout
+            timeout: 30000,
             maxContentLength: Infinity,
             maxBodyLength: Infinity
         });
