@@ -1,9 +1,3 @@
-export const FOOD_CATEGORIES = [
-  'apple_pie', 'baby_back_ribs', 'baklava', 'beef_carpaccio', 'beef_tartare',
-  'beet_salad', 'beignets', 'bibimbap', 'bread_pudding', 'breakfast_burrito',
-  // ... add all 101 categories
-];
-
 export const NUTRITION_COLORS = {
   protein: '#FF6B6B',
   fat: '#4ECDC4',

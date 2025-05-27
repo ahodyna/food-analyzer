@@ -29,7 +29,6 @@ function App() {
     if (!selectedFile) return alert('Please select a file first');
     try {
       await analyzeFood(selectedFile);
-      alert('Image sent to mocked server!');
     } catch (e) {
       alert('Failed to send image: ' + e.message);
     }
@@ -60,7 +59,7 @@ function App() {
       {analysis && (
         <ResultsDisplay
           analysis={analysis}
-          onNewAnalysis={clearAnalysis}
+          onNewAnalysis={() => { clearAnalysis(); clearSelection() }}
         />
       )}
 

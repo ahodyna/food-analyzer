@@ -1,9 +1,7 @@
 export const imageService = {
-  // Validate image file
   validateImage: (file) => {
     const errors = [];
     
-    // Check file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       errors.push('Please upload a JPEG, PNG, or WebP image');
@@ -21,17 +19,14 @@ export const imageService = {
     };
   },
 
-  // Create image preview URL
   createPreviewUrl: (file) => {
     return URL.createObjectURL(file);
   },
 
-  // Clean up preview URL
   revokePreviewUrl: (url) => {
     URL.revokeObjectURL(url);
   },
 
-  // Compress image if needed
   compressImage: async (file, maxWidth = 800, quality = 0.8) => {
     return new Promise((resolve) => {
       const canvas = document.createElement('canvas');
@@ -39,12 +34,10 @@ export const imageService = {
       const img = new Image();
       
       img.onload = () => {
-        // Calculate new dimensions
         const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
         canvas.width = img.width * ratio;
         canvas.height = img.height * ratio;
         
-        // Draw and compress
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(resolve, file.type, quality);
       };
@@ -53,7 +46,7 @@ export const imageService = {
     });
   },
 
-  // Get image dimensions
+
   getImageDimensions: (file) => {
     return new Promise((resolve) => {
       const img = new Image();

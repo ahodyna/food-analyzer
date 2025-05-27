@@ -9,16 +9,12 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
 
     const { food_type, confidence, nutrition, success, message } = analysis;
 
-    // Перевіряємо чи це помилка з низькою точністю
     const isLowAccuracy = (success === false && message === 'Accuracy less than 70%') || confidence < 0.7;
-    
-    // Перевіряємо чи немає інформації про калорії
+
     const hasNutritionError = food_type && !nutrition;
-    
-    // Чи це повністю успішний результат (без попереджень)
+
     const isFullySuccessful = food_type && nutrition && confidence >= 0.7;
 
-    // Відображення попередження про низьку точність
     const renderLowAccuracyWarning = () => (
         <motion.div
             className="warning-container warning-low-accuracy card"
@@ -30,7 +26,7 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
             <div className="warning-content">
                 <h3>Низька точність розпізнавання</h3>
                 <p>
-                    Система розпізнала продукт з точністю менше 70%. Результат може бути неточним. 
+                    Система розпізнала продукт з точністю менше 70%. Результат може бути неточним.
                     Спробуйте зробити більш чітке фото або змініть кут зйомки.
                 </p>
                 <div className="warning-details">
@@ -41,7 +37,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
         </motion.div>
     );
 
-    // Відображення попередження про відсутність калорій
     const renderNutritionWarning = () => (
         <motion.div
             className="warning-container warning-nutrition-error card"
@@ -53,7 +48,7 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
             <div className="warning-content">
                 <h3>Інформація про калорії недоступна</h3>
                 <p>
-                    Продукт успішно розпізнано, але не вдалося отримати детальну інформацію про 
+                    Продукт успішно розпізнано, але не вдалося отримати детальну інформацію про
                     калорійність та поживні речовини. Спробуйте пізніше або введіть дані вручну.
                 </p>
                 <div className="warning-details">
@@ -64,14 +59,12 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
         </motion.div>
     );
 
-    // Спрощена версія результату для випадків з попередженнями
     const renderSimpleResult = () => {
         const confidencePercentage = Math.round(confidence * 100);
         const confidenceColor = getConfidenceColor(confidence);
 
         return (
             <div className="results-content">
-                {/* Food Identification - завжди показуємо якщо є food_type */}
                 <motion.div
                     className="food-identification card"
                     initial={{ scale: 0.9 }}
@@ -95,7 +88,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                     </div>
                 </motion.div>
 
-                {/* Показуємо повідомлення про те, що детальна інформація недоступна */}
                 <motion.div
                     className="nutrition-unavailable card"
                     initial={{ scale: 0.9 }}
@@ -106,7 +98,7 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                         <div className="unavailable-icon">📊</div>
                         <h3>Детальна інформація про калорії недоступна</h3>
                         <p>
-                            {isLowAccuracy ? 
+                            {isLowAccuracy ?
                                 'Через низьку точність розпізнавання ми не можемо надати точну інформацію про поживні речовини.' :
                                 'Не вдалося отримати інформацію про калорії та БЖУ для цього продукту.'
                             }
@@ -119,7 +111,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
             </div>
         );
     };
-    // Повний успішний результат (ваш оригінальний код)
     const renderSuccessfulResult = () => {
         const { protein, fat, carbohydrates } = nutrition;
         const calories = calculateCalories(protein, fat, carbohydrates);
@@ -149,7 +140,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
 
         return (
             <div className="results-content">
-                {/* Food Identification */}
                 <motion.div
                     className="food-identification card"
                     initial={{ scale: 0.9 }}
@@ -173,7 +163,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                     </div>
                 </motion.div>
 
-                {/* Nutrition Overview */}
                 <motion.div
                     className="nutrition-overview card"
                     initial={{ scale: 0.9 }}
@@ -225,7 +214,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                     </div>
                 </motion.div>
 
-                {/* Nutrition Chart */}
                 <motion.div
                     className="chart-section card"
                     initial={{ scale: 0.9 }}
@@ -240,7 +228,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
                     />
                 </motion.div>
 
-                {/* Health Insights */}
                 <motion.div
                     className="health-insights card"
                     initial={{ scale: 0.9 }}
@@ -279,11 +266,10 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
             </div>
 
             <div className="results-content">
-                {/* Показуємо попередження ВСЕРЕДИНІ results-content */}
+
                 {isLowAccuracy && renderLowAccuracyWarning()}
                 {hasNutritionError && !isLowAccuracy && renderNutritionWarning()}
-                
-                {/* Показуємо результат залежно від ситуації */}
+
                 {isFullySuccessful && renderSuccessfulResult()}
                 {(isLowAccuracy || hasNutritionError) && !isFullySuccessful && food_type && renderSimpleResult()}
             </div>
@@ -291,7 +277,6 @@ const ResultsDisplay = ({ analysis, onNewAnalysis }) => {
     );
 };
 
-// Helper functions (ваші оригінальні функції)
 const getFoodEmoji = (foodType) => {
     const emojiMap = {
         'apple_pie': '🥧',
@@ -304,7 +289,6 @@ const getFoodEmoji = (foodType) => {
         'sushi': '🍣',
         'tacos': '🌮',
         'ice_cream': '🍦',
-        // Add more mappings as needed
     };
 
     return emojiMap[foodType] || '🍽️';

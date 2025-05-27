@@ -4,7 +4,6 @@ export const formatNutritionValue = (value, unit = 'g') => {
 };
 
 export const calculateCalories = (protein, fat, carbs) => {
-  // 4 cal/g for protein and carbs, 9 cal/g for fat
   return Math.round((protein * 4) + (fat * 9) + (carbs * 4));
 };
 

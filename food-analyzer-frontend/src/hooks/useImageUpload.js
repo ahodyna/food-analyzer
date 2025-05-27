@@ -15,25 +15,19 @@ export const useImageUpload = () => {
     setError(null);
 
     try {
-      // Validate the image
       const validation = imageService.validateImage(file);
       if (!validation.isValid) {
         setError(validation.errors.join(', '));
         return;
       }
-
-      // Get image dimensions
       const dimensions = await imageService.getImageDimensions(file);
       
-      // Compress if needed
       const processedFile = file.size > 1024 * 1024 
         ? await imageService.compressImage(file)
         : file;
 
-      // Create preview
       const preview = imageService.createPreviewUrl(processedFile);
 
-      // Clean up previous preview
       if (previewUrl) {
         imageService.revokePreviewUrl(previewUrl);
       }
