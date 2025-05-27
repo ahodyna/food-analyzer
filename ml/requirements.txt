@@ -12,7 +12,8 @@ fastapi>=0.68.0
 uvicorn[standard]>=0.15.0
 python-multipart>=0.0.5
 
-# Data processing and visualization
 matplotlib>=3.4.0
 tqdm>=4.64.0
 scikit-learn>=1.0.0
+
+timm>=0.9.0
